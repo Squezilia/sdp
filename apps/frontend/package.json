@@ -1,5 +1,5 @@
 {
-  "name": "@lena/frontend",
+  "name": "@sdp/frontend",
   "type": "module",
   "private": true,
   "scripts": {

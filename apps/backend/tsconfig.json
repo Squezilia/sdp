@@ -3,10 +3,10 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@lena/backend/*": ["src/*"],
-      "@lena/database": ["../../packages/database/src/index.ts"],
-      "@lena/database/*": ["../../packages/database/src/*"],
-      "@lena/config/*": ["../../packages/config/src/*"]
+      "@sdp/backend/*": ["src/*"],
+      "@sdp/database": ["../../packages/database/src/index.ts"],
+      "@sdp/database/*": ["../../packages/database/src/*"],
+      "@sdp/config/*": ["../../packages/config/src/*"]
     }
   },
   "include": ["src"]

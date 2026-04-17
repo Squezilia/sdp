@@ -1,5 +1,5 @@
 {
-  "name": "@lena/backend",
+  "name": "@sdp/backend",
   "module": "src/index.ts",
   "type": "module",
   "devDependencies": {

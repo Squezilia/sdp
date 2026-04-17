@@ -11,10 +11,10 @@ export default defineNuxtConfig({
       compilerOptions: {
         baseUrl: '.',
         paths: {
-          '@lena/frontend/*': ['./*'],
-          '@lena/backend/*': ['../backend/src/*'],
-          '@lena/database/*': ['../../packages/database/src/*'],
-          '@lena/config/*': ['../../packages/config/src/*'],
+          '@sdp/frontend/*': ['./*'],
+          '@sdp/backend/*': ['../backend/src/*'],
+          '@sdp/database/*': ['../../packages/database/src/*'],
+          '@sdp/config/*': ['../../packages/config/src/*'],
 
           '#app': ['./.nuxt/app'],
           '#imports': ['./.nuxt/imports'],

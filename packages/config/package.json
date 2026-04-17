@@ -1,5 +1,5 @@
 {
-  "name": "@lena/config",
+  "name": "@sdp/config",
   "type": "module",
   "module": "src/index.ts",
   "private": true,

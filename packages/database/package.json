@@ -1,5 +1,5 @@
 {
-  "name": "@lena/database",
+  "name": "@sdp/database",
   "type": "module",
   "module": "src/index.ts",
   "private": true,

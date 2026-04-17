@@ -3,8 +3,8 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@lena/database": ["src"],
-      "@lena/config": ["../config/src"]
+      "@sdp/database": ["src"],
+      "@sdp/config": ["../config/src"]
     }
   },
   "include": ["src"]
