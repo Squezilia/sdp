@@ -1,0 +1,14 @@
+{
+  "name": "@lena/database",
+  "type": "module",
+  "module": "src/index.ts",
+  "private": true,
+  "devDependencies": {
+    "prisma": "^7.0.1",
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "@prisma/adapter-pg": "^7.0.1",
+    "@prisma/client": "^7.0.1"
+  }
+}

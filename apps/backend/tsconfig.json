@@ -1,0 +1,13 @@
+{
+  "extends": "../../packages/config/tsconfig.base.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "paths": {
+      "@lena/backend/*": ["src/*"],
+      "@lena/database": ["../../packages/database/src/index.ts"],
+      "@lena/database/*": ["../../packages/database/src/*"],
+      "@lena/config/*": ["../../packages/config/src/*"]
+    }
+  },
+  "include": ["src"]
+}

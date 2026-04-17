@@ -1,0 +1,27 @@
+{
+  "name": "lena",
+  "module": "index.ts",
+  "type": "module",
+  "workspaces": [
+    "./apps/*",
+    "./packages/*"
+  ],
+  "scripts": {
+    "backend:start": "NODE_ENV=production && bun apps/backend/src/index.ts",
+    "backend:dev": "NODE_ENV=development && bun --watch apps/backend/src/index.ts",
+    "backend:build": "bun build --compile --minify-whitespace --minify-syntax --target bun --outfile dist/server apps/backend/src/index.ts",
+    "frontend:start": "cd apps/frontend && nuxt start",
+    "frontend:dev": "bun --cwd=apps/frontend nuxt dev",
+    "frontend:build": "cd apps/frontend && nuxt build",
+    "database:generate": "bunx prisma generate",
+    "database:push": "bunx prisma db push",
+    "database:pull": "bunx prisma db pull",
+    "lint": "eslint"
+  },
+  "devDependencies": {
+    "@types/bun": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  }
+}

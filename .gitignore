@@ -1,0 +1,12 @@
+node_modules
+.env
+.env.*
+.nuxt
+.output
+dist
+coverage
+*.log
+*.tmp
+.DS_Store
+*.tsbuildinfo
+
