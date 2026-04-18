@@ -1,5 +1,9 @@
+<script lang="ts">
+import { useColorMode } from '@vueuse/core';
+
+useColorMode().value = 'auto';
+</script>
+
 <template>
-  <div>
-    <h1>hello</h1>
-  </div>
+  <NuxtPage />
 </template>
