@@ -7,7 +7,7 @@ import {
   DropdownMenuPortal,
   useForwardPropsEmits,
 } from 'reka-ui'
-import { cn } from '@sdp/frontend/app/lib/utils'
+import { cn } from '@/lib/utils'
 
 defineOptions({
   inheritAttrs: false,

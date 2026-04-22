@@ -9,7 +9,9 @@
 * 🟢 You can import this file directly.
 */
 
+export const Protocol = {
+  TCP: 'TCP',
+  UDP: 'UDP'
+} as const
 
-
-// This file is empty because there are no enums in the schema.
-export {}
+export type Protocol = (typeof Protocol)[keyof typeof Protocol]

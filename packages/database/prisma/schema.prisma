@@ -85,6 +85,8 @@ model Organization {
   metadata    String?
   members     Member[]
   invitations Invitation[]
+  deployments Deployment[]
+  services    Service[]
 
   @@unique([slug])
   @@map("organization")
@@ -119,4 +121,57 @@ model Invitation {
   @@index([organizationId])
   @@index([email])
   @@map("invitation")
+}
+
+model Deployment {
+  id String @id @default(uuid(7))
+
+  name     String
+  selector String
+  image    String
+  replicas Int
+
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId String
+  services       Service[]
+
+  @@index([organizationId])
+}
+
+model Service {
+  id String @id @default(uuid(7))
+
+  name String
+
+  deployment   Deployment @relation(fields: [deploymentId], references: [id])
+  deploymentId String
+
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  organizationId String
+
+  ports ServicePort[]
+
+  @@unique([organizationId, name])
+  @@index([deploymentId])
+}
+
+enum Protocol {
+  TCP
+  UDP
+}
+
+model ServicePort {
+  id String @id @default(uuid(7))
+
+  name String
+
+  protocol   Protocol
+  port       Int
+  targetPort Int
+
+  service   Service @relation(fields: [serviceId], references: [id])
+  serviceId String
+
+  @@unique([serviceId, name])
+  @@index([serviceId])
 }

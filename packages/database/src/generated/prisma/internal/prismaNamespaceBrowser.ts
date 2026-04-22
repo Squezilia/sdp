@@ -57,7 +57,10 @@ export const ModelName = {
   Verification: 'Verification',
   Organization: 'Organization',
   Member: 'Member',
-  Invitation: 'Invitation'
+  Invitation: 'Invitation',
+  Deployment: 'Deployment',
+  Service: 'Service',
+  ServicePort: 'ServicePort'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -172,6 +175,40 @@ export const InvitationScalarFieldEnum = {
 } as const
 
 export type InvitationScalarFieldEnum = (typeof InvitationScalarFieldEnum)[keyof typeof InvitationScalarFieldEnum]
+
+
+export const DeploymentScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  selector: 'selector',
+  image: 'image',
+  replicas: 'replicas',
+  organizationId: 'organizationId'
+} as const
+
+export type DeploymentScalarFieldEnum = (typeof DeploymentScalarFieldEnum)[keyof typeof DeploymentScalarFieldEnum]
+
+
+export const ServiceScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  deploymentId: 'deploymentId',
+  organizationId: 'organizationId'
+} as const
+
+export type ServiceScalarFieldEnum = (typeof ServiceScalarFieldEnum)[keyof typeof ServiceScalarFieldEnum]
+
+
+export const ServicePortScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  protocol: 'protocol',
+  port: 'port',
+  targetPort: 'targetPort',
+  serviceId: 'serviceId'
+} as const
+
+export type ServicePortScalarFieldEnum = (typeof ServicePortScalarFieldEnum)[keyof typeof ServicePortScalarFieldEnum]
 
 
 export const SortOrder = {

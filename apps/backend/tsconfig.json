@@ -4,9 +4,16 @@
     "baseUrl": ".",
     "paths": {
       "@sdp/backend/*": ["src/*"],
+      "@sdp/config/*": ["../../packages/config/src/*"],
+
       "@sdp/database": ["../../packages/database/src/index.ts"],
       "@sdp/database/*": ["../../packages/database/src/*"],
-      "@sdp/config/*": ["../../packages/config/src/*"]
+      "@sdp/database/prismabox": [
+        "../../packages/database/src/generated/prismabox/barrel.ts"
+      ],
+      "@sdp/database/prisma": [
+        "../../packages/database/src/generated/prisma/client.ts"
+      ]
     }
   },
   "include": ["src"]
