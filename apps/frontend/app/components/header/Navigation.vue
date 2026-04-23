@@ -12,53 +12,16 @@ interface Sub {
   style?: HTMLAttributes['class'];
 }
 
-type Tabs = Record<RouteLocationAsString, string | Record<string, Sub>>;
+export type Tabs = Record<RouteLocationAsString, string | Record<string, Sub>>;
 
-const tabs: Tabs = {
-  'Ana Sayfa': '/',
-  Hizmetler: {
-    VDS: {
-      path: '/services/vds',
-      icon: 'solar:laptop-minimalistic-bold',
-      description: 'Performanslı size özel sanal sunucular.',
-      style: 'from-violet-500/20 to-violet-500/0',
-    },
-    VPS: {
-      path: '/services/vps',
-      icon: 'solar:laptop-minimalistic-bold',
-      description: 'Performanslı paylaşımlı sanal sunucular.',
-      style: 'from-violet-500/20 to-violet-500/0',
-    },
-    Dedicated: {
-      path: '/services/dedicated',
-      icon: 'solar:server-square-bold',
-      description: 'Sanallaştırma olmadan saf donanıma sahip sunucular.',
-      wide: true,
-      style: 'col-span-2 from-amber-500/20 to-amber-500/0',
-    },
-  },
-  Yardım: {
-    Dokumentasyon: {
-      path: '/help/docs',
-      icon: 'solar:book-2-bold',
-      description: 'Sistemlerimiz hakkındaki el kitapçığı.',
-      style: 'from-emerald-500/20 to-emerald-500/0',
-    },
-    İletişim: {
-      path: '/help/contact',
-      icon: 'solar:help-bold',
-      description: 'Çözülemeyen sorunlarınız için yardım masamız.',
-      style: 'from-emerald-500/20 to-emerald-500/0',
-    },
-  },
-};
+const { navigation } = useAppConfig();
 </script>
 
 <template>
   <NavigationMenu :skip-delay-duration="0">
     <NavigationMenuList class="gap-2">
       <NavigationMenuItem
-        v-for="[tab, content] of Object.entries(tabs)"
+        v-for="[tab, content] of Object.entries(navigation)"
         :key="tab"
       >
         <NavigationMenuLink

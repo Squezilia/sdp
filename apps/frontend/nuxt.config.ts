@@ -6,6 +6,14 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   debug: false,
 
+  experimental: {
+    defaults: {
+      nuxtLink: {
+        trailingSlash: 'remove',
+      },
+    },
+  },
+
   modules: [
     '@nuxt/eslint',
     '@nuxt/fonts',

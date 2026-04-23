@@ -137,7 +137,7 @@ watch(
 <template>
   <div class="w-full flex items-center h-full justify-center">
     <section
-      class="flex relative justify-center border xl:w-4xl overflow-hidden rounded-xl p-2 xl:min-h-120"
+      class="flex relative justify-center border xl:w-4xl overflow-hidden rounded-2xl p-2.5 xl:min-h-120"
     >
       <NuxtImg
         src="/mesh_bg.jpg"

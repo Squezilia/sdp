@@ -1,5 +1,5 @@
 <script lang="ts" setup>
-import type { ToasterProps } from 'vue-sonner'
+import type { ToasterProps } from 'vue-sonner';
 
 import {
   CircleCheckIcon,
@@ -8,11 +8,13 @@ import {
   OctagonXIcon,
   TriangleAlertIcon,
   XIcon,
-} from 'lucide-vue-next'
-import { Toaster as Sonner } from 'vue-sonner'
-import { cn } from '@/lib/utils'
+} from 'lucide-vue-next';
+import { Toaster as Sonner } from 'vue-sonner';
+import { cn } from '@/lib/utils';
+import { useColorMode } from '@vueuse/core';
 
-const props = defineProps<ToasterProps>()
+const props = defineProps<ToasterProps>();
+const mode = useColorMode().state;
 </script>
 
 <template>
@@ -24,12 +26,8 @@ const props = defineProps<ToasterProps>()
       '--normal-border': 'var(--border)',
       '--border-radius': 'var(--radius)',
     }"
-    :toast-options="{
-      classes: {
-        toast: 'rounded-2xl',
-      },
-    }"
     v-bind="props"
+    :theme="mode"
   >
     <template #success-icon>
       <CircleCheckIcon class="size-4" />

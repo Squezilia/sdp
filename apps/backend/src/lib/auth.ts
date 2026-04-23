@@ -13,6 +13,7 @@ type InferPermissionsFromStatement<
 };
 
 export const auth = betterAuth({
+  trustedOrigins: ['http://localhost:8080'],
   emailAndPassword: {
     enabled: true,
   },

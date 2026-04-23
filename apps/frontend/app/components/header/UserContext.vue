@@ -21,7 +21,7 @@ const user = authClient.useSession();
           <ChevronDown />
         </Button>
       </DropdownMenuTrigger>
-      <DropdownContentUser />
+      <DropdownUserContent />
     </DropdownMenu>
   </div>
 </template>
