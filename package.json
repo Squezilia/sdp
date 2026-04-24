@@ -19,9 +19,11 @@
     "databases:generate": "bun prisma generate --schema=packages/app-db/prisma/schema.prisma && bun prisma generate --schema=packages/ims-db/prisma/schema.prisma",
     "databases:push": "bun --schema=packages/app-db/prisma/schema.prisma prisma db push && bun prisma db push --schema=packages/ims-db/prisma/schema.prisma",
     "databases:pull": "bun --schema=packages/app-db/prisma/schema.prisma prisma db pull && bun prisma db pull --schema=packages/ims-db/prisma/schema.prisma",
+    "proto:generate": "find ./packages/proto/src -name \"*.proto\" -exec proto-loader-gen-types --longs=String --enums=String --defaults --oneofs --grpcLib=@grpc/grpc-js -O ./packages/proto/dist {} +",
     "lint": "eslint"
   },
   "devDependencies": {
+    "@grpc/proto-loader": "^0.8.0",
     "@types/bun": "latest",
     "dotenv": "^17.4.2",
     "prisma": "^7.7.0"

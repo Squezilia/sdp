@@ -13,7 +13,10 @@
       ],
       "@sdp/app-db/prisma": [
         "../../packages/app-db/src/generated/prisma/client.ts"
-      ]
+      ],
+
+      "@sdp/proto": ["../../packages/proto/src/index.ts"],
+      "@sdp/proto/generated/*": ["../../packages/proto/dist/*"]
     }
   },
   "include": ["src"]

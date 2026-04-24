@@ -1,7 +1,0 @@
-syntax = 'proto3';
-
-package sdp.ims.vm.v1;
-
-service VM {
-
-}

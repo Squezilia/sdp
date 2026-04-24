@@ -1,13 +1,13 @@
 syntax = "proto3";
-package sdp.ims.cluster.v1;
+package ims.cluster;
 
 import "google/protobuf/timestamp.proto";
 
-service Cluster {
-  rpc InitCluster (CreateClusterRequest) returns (Task);
+service ClusterService {
+  rpc InitCluster(InitClusterRequest) returns (Task);
 }
 
-message CreateClusterRequest {
+message InitClusterRequest {
   string name = 1;
   oneof config {
     ProxmoxConfig proxmox = 2;

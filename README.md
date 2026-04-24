@@ -49,6 +49,9 @@ bun install
 # Prepare Prisma
 bun run databases:generate
 bun run databases:push
+
+# Prepare Protocol Buffers
+bun run proto:generate
 ```
 
 ### Mevcut Komutlar
@@ -74,4 +77,5 @@ bun run databases:push
   bun run databases:push       # Prisma Schemalarını Veritabanlarına yükle
   bun run databases:pull       # Veritabanlarından Prisma Schemalarını indir
   bun run lint                 # Linter çalıştır (eslint)
+  bun run proto:generate       # Protocol Buffers dosyalarını TypeScript için derle
 ```
