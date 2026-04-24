@@ -1,5 +1,5 @@
 {
-  "name": "@sdp/database",
+  "name": "@sdp/app-db",
   "type": "module",
   "module": "src/index.ts",
   "private": true,

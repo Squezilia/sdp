@@ -1,4 +1,4 @@
-import { Prisma } from '@sdp/database/prisma';
+import { Prisma } from '@sdp/app-db/prisma';
 import logger from './logger';
 import Elysia from 'elysia';
 

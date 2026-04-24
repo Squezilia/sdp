@@ -1,0 +1,58 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model Task {
+  id    String @id @default(uuid(7))
+  topic String
+
+  logs String[]
+
+  cluster   Cluster @relation(fields: [clusterId], references: [id])
+  clusterId String
+
+  node   Node   @relation(fields: [nodeId], references: [id])
+  nodeId String
+
+  @@index([nodeId, id])
+  @@index([clusterId, id])
+}
+
+enum Provider {
+  PROXMOX
+  VCENTER
+}
+
+model Cluster {
+  id String @id @default(uuid(7))
+  ip String @db.Inet
+
+  name     String
+  provider Provider
+
+  nodes Node[]
+  tasks Task[]
+}
+
+model Node {
+  id String @id @default(uuid(7))
+  ip String @db.Inet
+
+  name String
+
+  priority Int // semi-static
+  mem      Int // semi-static
+  cpu      Int // semi-static
+
+  cluster   Cluster @relation(fields: [clusterId], references: [id])
+  clusterId String
+  tasks     Task[]
+
+  @@unique([ip])
+  @@unique([clusterId, name])
+}

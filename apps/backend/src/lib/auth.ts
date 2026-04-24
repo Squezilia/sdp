@@ -1,6 +1,6 @@
 import { betterAuth } from 'better-auth';
 import { prismaAdapter } from 'better-auth/adapters/prisma';
-import prisma from '@sdp/database';
+import prisma from '@sdp/app-db';
 import { username, organization } from 'better-auth/plugins';
 import Elysia, { status } from 'elysia';
 import { ac, admin, owner, statement } from './organizations';

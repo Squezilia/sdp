@@ -13,9 +13,9 @@
     "frontend:start": "cd apps/frontend && bun --env-file=../.env nuxt start",
     "frontend:dev": "bun --env-file=../.env --cwd=apps/frontend nuxt dev",
     "frontend:build": "cd apps/frontend && nuxt build",
-    "database:generate": "bunx prisma generate",
-    "database:push": "bunx prisma db push",
-    "database:pull": "bunx prisma db pull",
+    "databases:generate": "bun prisma generate --schema=packages/app-db/prisma/schema.prisma && bun prisma generate --schema=packages/ims-db/prisma/schema.prisma",
+    "databases:push": "bun --schema=packages/app-db/prisma/schema.prisma prisma db push && bun prisma db push --schema=packages/ims-db/prisma/schema.prisma",
+    "databases:pull": "bun --schema=packages/app-db/prisma/schema.prisma prisma db pull && bun prisma db pull --schema=packages/ims-db/prisma/schema.prisma",
     "lint": "eslint"
   },
   "devDependencies": {

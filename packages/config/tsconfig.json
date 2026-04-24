@@ -4,7 +4,7 @@
     "baseUrl": ".",
     "paths": {
       "@sdp/config": ["src"],
-      "@sdp/database": ["../database/src"]
+      "@sdp/app-db": ["../app-db/src"]
     }
   },
   "include": ["src"]

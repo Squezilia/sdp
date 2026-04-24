@@ -48,12 +48,12 @@ export default defineNuxtConfig({
 
           '@sdp/config/*': ['../../../packages/config/src/*'],
 
-          '@sdp/database/*': ['../../../packages/database/src/*'],
-          '@sdp/database/prismabox': [
-            '../../../packages/database/src/generated/prismabox/barrel',
+          '@sdp/app-db/*': ['../../../packages/app-db/src/*'],
+          '@sdp/app-db/prismabox': [
+            '../../../packages/app-db/src/generated/prismabox/barrel',
           ],
-          '@sdp/database/prisma': [
-            '../../../packages/database/src/generated/prisma/client',
+          '@sdp/app-db/prisma': [
+            '../../../packages/app-db/src/generated/prisma/client',
           ],
         },
       },
