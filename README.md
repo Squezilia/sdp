@@ -1,111 +1,77 @@
-# SDP - Simple Deployment Project
+# SDP - Simple Development Project
 
-## Monorepo Layout
+Bu projenin asıl amacı oldukça basit bir `commercial use` hosting sitesi oluşturmak. Bu projeyi geliştirirkenki hedeflerim ise;
 
-- `apps/backend` – Bun/Elysia HTTP API with Swagger docs
-- `apps/frontend` – Nuxt 4 app
-- `packages/database` – Prisma schema and client wrapper (`@sdp/database`)
-- `packages/config` – Centralized TypeScript + ESLint configs and runtime config (`@sdp/config`)
+- Kullanıcıyı aşırı basit ve birbirinin aynısı `WHMCS` arayüzlerinden kurtarıp gerçekten cloud kullanıyormuş gibi hissettirmek
+- Infastructure yönetimini, araçlarını ve konseptlerini öğrenmek (Proxmox, HA, Corosync, Ceph)
+- Microservices konseptini kısmen kullanmak ve Zero Trust mimarisini öğrenmek
+- gRPC ve Protobuffers öğrenmek
 
-The root `package.json` uses workspaces to tie everything together.
+SDP yapısal olarak karmaşık değildir; `Backend`, `Frontend` ve `IMS` yapılarından oluşur.
 
-## Backend (`apps/backend`)
+## Backend
 
-- Runtime: Bun
-- Framework: Elysia
-- Plugins:
-  - `@elysiajs/swagger` – Swagger/OpenAPI UI
+Backend, SDP'nin uygulama işlemlerini yaptığı yerdir. Kullanıcı, Organizasyon, Ödeme, Ürün yönetimi ve Admin işlemleri gibi kullanıcı ve sistem yöneticisinin yapacağı işlemler Backend'de bulunur.
 
-Features:
+Backend 4 servisden oluşur ve bunlar; `Auth`, `Infastructure`, `Payment` ve `Resource` servisleridir. 80/443 portunda çalışan bir HTTP(s) sunucusudur ve [Bun runtime](https://bun.com/) üzerinde `Elysia` frameworkünü kullanarak çalışır.
 
-- `GET /` – returns `Hello Lena!!`
-- Swagger documentation is served via the Swagger plugin.
+[Elysia](https://elysiajs.com/) frameworkünün doğası gereği tamamen type-safe olup geliştirme süreci için `/swagger` noktası altında `Scalar` arayüzlü Swagger Dokümentasyonuna sahiptir.
 
-Development:
+`Auth` servisinde [better-auth](https://better-auth.com/) frameworkünü [organization](https://better-auth.com/docs/plugins/organization), [username](https://better-auth.com/docs/plugins/username), [admin](https://better-auth.com/docs/plugins/admin) pluginleriyle birlikte `Google` ve `GitHub` SSO ayarlarıyla kullanır.
+
+`Infastructure` servisinde `IMS` yapısına dayanır. Platform düzeyinde işlemleri gerçekleştirmek için `IMS` ile `gRPC` üzerinden konuşur. Bu konuşma arasındaki güvenlik ise `mTLS` ile sağlanır.
+
+`Payment` servisinde Backend [PayTR](https://dev.paytr.com/en) veya [İyzico](https://docs.iyzico.com/) üzerinden ödemeleri gerçekleştirir.
+
+`Resources` servisinde kullanıcının sahip olduğu kaynaklar bulunur. Bunlar; ISO kurulum imajları veya qcow2/img formatında disk imajları olabilir. Bu servisde kullanıcıya belirbir bir alan terhis edilir lakin bu alan kiralanan hizmet karşılığında terhis edilmektedir.
+
+## Frontend
+
+Frontend ise sadece Backend ile iletişime geçmek için vardır. [shadcn-vue](https://www.shadcn-vue.com/) arayüz kütüphanesi kullanılarak [nuxt](https://nuxt.com/) üzerinde geliştirilmiştir.
+
+> [!WARNING]
+> Deployment sırasında Backend ile Frontend'in aynı domain altında olduğundan emin olun.
+
+## IMS (Infastructure Management System)
+
+IMS'in en temel amacı; Birden fazla clusterın yönetiminin tek bir çatı altında birleştirilmesi ve kullanıcı işlemlerinin fazla detaya gerek duymadan bu clusterlar üzerinde gerçekleştirilmesidir.
+
+IMS tek başına ayrı bir node üzerinde single process/single threaded çalışmak üzere tasarlanmıştır. Bunun sebebi IMS'in aktif çalışan bir servis olması, diğer servisler veya izlediği clusterlardan etkilenmemesi gerekmektedir.
+
+## Kurulum
+
+`.env.example` dosyasını `.env` olarak yeniden adlandırıp içindeki değişkenleri kendi ortamınıza göre ayarlamanız gerekmektedir.
 
 ```bash
-# from repo root
+# Run in project root
 bun install
-bun run backend:dev
+
+# Prepare Prisma
+bun run databases:generate
+bun run databases:push
 ```
 
-The backend listens on `http://localhost:3000`.
-
-## Frontend (`apps/frontend`)
-
-- Framework: Nuxt 4
-- Language: TypeScript
-- Extras: Nuxt ESLint module, fonts, hints, image module
-
-TypeScript is configured through Nuxt’s `typescript.tsConfig` option and extends the shared base config in `packages/config`. Nuxt-style aliases (`#app`, `#components`, `#pages`, etc.) are also wired there.
-
-Development:
+### Mevcut Komutlar
 
 ```bash
-# from repo root
-bun install
-bun run frontend:dev
+  # Backend
+  bun run backend:start        # Backend'i PRODUCTION modunda çalıştır
+  bun run backend:dev          # Backend'i DEVELOPMENT modunda çalıştır
+  bun run backend:build        # Bun Bundler kullanarak Backend'i PRODUCTION için derle
+
+  # IMS
+  bun run ims:start            # IMS'i PRODUCTION modunda çalıştır
+  bun run ims:dev              # IMS'i DEVELOPMENT modunda çalıştır
+  bun run ims:build            # Bun Bundler kullanarak IMS'i PRODUCTION için derle
+
+  # Frontend
+  bun run frontend:start       # Frontend'i PRODUCTION modunda çalıştır
+  bun run frontend:dev         # Frontend'i DEVELOPMENT modunda çalıştır
+  bun run frontend:build       # Frontend'i PRODUCTION için derle
+
+  # Utilities
+  bun run databases:generate   # Veritabanları için Prisma Clientleri oluştur
+  bun run databases:push       # Prisma Schemalarını Veritabanlarına yükle
+  bun run databases:pull       # Veritabanlarından Prisma Schemalarını indir
+  bun run lint                 # Linter çalıştır (eslint)
 ```
-
-The dev server will start on the port configured by Nuxt (typically `http://localhost:3000`, if not occupied by the backend).
-
-## Packages
-
-### `@sdp/database` (`packages/database`)
-
-- Holds the Prisma schema (`packages/database/prisma/schema.prisma`).
-- Exposes a typed Prisma client and helper:
-  - `prisma` – shared `PrismaClient` instance
-  - `connectDatabase()` – helper to connect on startup
-
-This keeps all database concerns out of the backend app itself.
-
-### `@sdp/config` (`packages/config`)
-
-- Central place for:
-  - Shared TypeScript base config (`tsconfig.base.json`)
-  - Shared ESLint config (`eslint.config.mjs`)
-  - Simple runtime configuration (`src/index.ts`)
-
-Apps and other packages extend these configs instead of defining their own from scratch.
-
-## Scripts (root)
-
-From the repo root:
-
-- `bun run backend:dev` – start backend in watch mode
-- `bun run backend:start` – start backend with `NODE_ENV=production`
-- `bun run backend:build` – placeholder (no build step yet)
-- `bun run frontend:dev` – start Nuxt dev server
-- `bun run frontend:start` – start built Nuxt app
-- `bun run frontend:build` – build frontend for production
-- `bun run database:generate` – run `prisma generate` using `packages/database/prisma/schema.prisma`
-- `bun run database:push` – push Prisma schema to the database
-- `bun run database:pull` – introspect database into Prisma schema
-- `bun run lint` – run ESLint using the shared config in `@sdp/config`
-
-## Getting Started
-
-1. Install dependencies:
-
-   ```bash
-   bun install
-   ```
-
-2. Set up your environment:
-   - Create `.env` with any vars you need, especially `DATABASE_URL` for Prisma in `@sdp/database`.
-
-3. (Optional) Sync the database schema:
-
-   ```bash
-   bun run database:push
-   ```
-
-4. Run backend and/or frontend:
-
-   ```bash
-   bun run backend:dev
-   bun run frontend:dev
-   ```
-
-You can now iterate on backend, frontend, and shared packages within a single monorepo, with all tooling and config centralized in `@sdp/config`.
