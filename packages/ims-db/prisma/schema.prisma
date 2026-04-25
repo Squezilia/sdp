@@ -7,11 +7,20 @@ datasource db {
   provider = "postgresql"
 }
 
+enum TaskStatus {
+  RUNNING
+  SUCCESS
+  SUSPENDED
+  PENDING
+  FAILED
+}
+
 model Task {
   id    String @id @default(uuid(7))
   topic String
 
-  logs String[]
+  status TaskStatus @default(RUNNING)
+  logs   String[]
 
   cluster   Cluster @relation(fields: [clusterId], references: [id])
   clusterId String
@@ -21,6 +30,17 @@ model Task {
 
   @@index([nodeId, id])
   @@index([clusterId, id])
+}
+
+model Credential {
+  id   String @id @default(uuid(7))
+  name String
+  key  String
+
+  clusters Cluster[]
+
+  @@unique([name])
+  @@index([name])
 }
 
 enum Provider {
@@ -37,6 +57,9 @@ model Cluster {
 
   nodes Node[]
   tasks Task[]
+
+  credential   Credential @relation(fields: [credentialId], references: [id])
+  credentialId String
 }
 
 model Node {
