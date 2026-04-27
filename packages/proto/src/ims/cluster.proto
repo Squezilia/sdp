@@ -1,0 +1,64 @@
+syntax = "proto3";
+package ims.cluster;
+
+import "common/pagination.proto";
+import "credentials.proto";
+import "google/protobuf/timestamp.proto";
+
+service ClusterService {
+  rpc InitCluster(InitClusterRequest) returns (Task);
+  rpc GetCluster(ClusterSelector) returns (Cluster);
+  rpc GetClusters(GetClustersRequest) returns (GetClustersResponse);
+  rpc UpdateCluster(UpdateClusterRequest) returns (Cluster);
+  rpc DeleteCluster(ClusterSelector) returns (Cluster);
+}
+
+message InitClusterRequest {
+  string name = 1;
+  string ip = 2;
+  oneof credentials {
+    string credentials_id = 3;
+    ims.credentials.CreateCredentialRequest create_credentials = 4;
+  }
+}
+
+message ClusterSelector {
+  string id = 1;
+}
+
+message GetClustersRequest {
+  optional string id = 1;
+  optional string name = 2;
+  optional Provider provider = 3;
+  optional uint32 page = 4;
+  optional uint32 page_size = 5;
+}
+
+message GetClustersResponse {
+  repeated Cluster data = 1;
+  ims.common.pagination.PaginationMetadata meta = 2;
+}
+
+message UpdateClusterRequest {
+  string id = 1;
+
+  optional string ip = 2;
+  optional string name = 3;
+}
+
+enum Provider {
+  PROXMOX = 0;
+  VCENTER = 1;
+}
+
+message Cluster {
+  string id = 1;
+  string name = 2;
+  string ip = 3;
+  Provider provider = 4;
+}
+
+message Task {
+  string id = 1;
+  google.protobuf.Timestamp started_at = 2;
+}

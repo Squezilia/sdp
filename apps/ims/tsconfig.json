@@ -6,13 +6,13 @@
       "@sdp/backend/*": ["src/*"],
       "@sdp/config/*": ["../../packages/config/src/*"],
 
-      "@sdp/app-db": ["../../packages/app-db/src/index.ts"],
-      "@sdp/app-db/*": ["../../packages/app-db/src/*"],
-      "@sdp/app-db/prismabox": [
-        "../../packages/app-db/src/generated/prismabox/barrel.ts"
+      "@sdp/ims-db": ["../../packages/ims-db/src/index.ts"],
+      "@sdp/ims-db/*": ["../../packages/ims-db/src/*"],
+      "@sdp/ims-db/prismabox": [
+        "../../packages/ims-db/src/generated/prismabox/barrel.ts"
       ],
-      "@sdp/app-db/prisma": [
-        "../../packages/app-db/src/generated/prisma/client.ts"
+      "@sdp/ims-db/prisma": [
+        "../../packages/ims-db/src/generated/prisma/client.ts"
       ],
 
       "@sdp/proto": ["../../packages/proto/src/index.ts"],

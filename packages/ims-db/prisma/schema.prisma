@@ -33,14 +33,15 @@ model Task {
 }
 
 model Credential {
-  id   String @id @default(uuid(7))
-  name String
-  key  String
+  id String @id @default(uuid(7))
+
+  key    String
+  secret String
 
   clusters Cluster[]
 
-  @@unique([name])
-  @@index([name])
+  @@unique([key])
+  @@index([key])
 }
 
 enum Provider {
