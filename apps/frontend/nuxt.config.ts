@@ -80,7 +80,8 @@ export default defineNuxtConfig({
         'zod',
         'vee-validate',
         '@vee-validate/zod',
-      ],
+        'just-kebab-case',
+      ]
     },
   },
 

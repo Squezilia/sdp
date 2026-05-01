@@ -23,6 +23,7 @@
     "clsx": "^2.1.1",
     "embla-carousel-vue": "^8.6.0",
     "eslint": "^9.0.0",
+    "just-kebab-case": "^4.2.0",
     "lucide-vue-next": "^1.0.0",
     "motion-v": "^2.2.1",
     "nuxt": "^4.2.1",

@@ -54,7 +54,7 @@ const onSubmit = handleSubmit((values) => {
 watch(
   () => session.value.data,
   (n) => {
-    if (n) useRouter().push('/');
+    if (n) navigateTo('/');
   }
 );
 </script>

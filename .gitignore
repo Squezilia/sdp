@@ -12,4 +12,5 @@ coverage
 *.tsbuildinfo
 packages/app-db/src/generated
 packages/ims-db/src/generated
-
+fapi-config.json
+fapi-home/

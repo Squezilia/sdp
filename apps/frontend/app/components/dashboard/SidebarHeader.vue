@@ -6,15 +6,32 @@ import { authClient } from '~/lib/auth';
 
 const sidebar = useSidebar();
 const organization = authClient.useActiveOrganization();
+const organizations = authClient.useListOrganizations();
 
-watch(
-  () => organization.value.isPending,
-  (newVal) => {
-    if (newVal) return;
-    if (!organization.value.data) navigateTo('/create');
-  },
-  { deep: true }
-);
+const obj = reactive({
+  organizations: organizations.value.isPending,
+  organization: organization.value.isPending,
+});
+
+if (!obj.organizations) {
+  if (!organizations.value.data || organizations.value.data.length === 0)
+    navigateTo('/create');
+  else if (!organization.value.data) {
+    authClient.organization.setActive({
+      organizationId: organizations.value.data[0]?.id,
+    });
+  }
+}
+
+watch(obj, (newVal) => {
+  if (newVal.organizations) return;
+  if (!organizations.value.data || organizations.value.data.length === 0)
+    return navigateTo('/create');
+  if (newVal.organization) return;
+  authClient.organization.setActive({
+    organizationId: organizations.value.data[0]?.id,
+  });
+});
 </script>
 
 <template>
@@ -24,6 +41,7 @@ watch(
         <DropdownMenuTrigger>
           <ClientOnly>
             <SidebarMenuButton
+              v-if="organization.data"
               class="h-8.5 max-w-[90%] relative group-data-[state=collapsed]:w-10! group-data-[state=collapsed]:justify-center transition-[padding_0s] group-data-[state=collapsed]:max-w-10! px-1"
             >
               <Avatar class="rounded-lg size-7">
@@ -41,7 +59,7 @@ watch(
                 :animate="{ width: '100%', opacity: 100 }"
                 :transition="{ duration: 0.2 }"
                 class="truncate"
-                >Organization Name</motion.span
+                >{{ organization.data.name }}</motion.span
               >
               <motion.div
                 v-if="sidebar.state.value === 'expanded'"
@@ -55,22 +73,30 @@ watch(
             </SidebarMenuButton>
           </ClientOnly>
         </DropdownMenuTrigger>
-        <DropdownMenuContent class="min-w-56">
-          <LazyDropdownMenuGroup>
-            <DropdownMenuLabel>Organizasyonlar</DropdownMenuLabel>
-            <DropdownMenuItem>
-              <Avatar class="rounded-md size-6">
-                <AvatarImage class="rounded-md" src="" />
-                <AvatarFallback
-                  class="rounded-md bg-emerald-400 text-neutral-900"
-                >
-                  <GalleryVerticalEnd class="size-3.5" />
-                </AvatarFallback>
-              </Avatar>
-              <span>Organization Name</span>
-            </DropdownMenuItem>
-          </LazyDropdownMenuGroup>
-        </DropdownMenuContent>
+        <ClientOnly>
+          <DropdownMenuContent v-if="organizations.data" class="min-w-56">
+            <LazyDropdownMenuGroup>
+              <DropdownMenuLabel>Organizasyonlar</DropdownMenuLabel>
+              <DropdownMenuItem
+                v-for="org of organizations.data"
+                :key="org.id"
+                @click="
+                  authClient.organization.setActive({ organizationId: org.id })
+                "
+              >
+                <Avatar class="rounded-md size-6">
+                  <AvatarImage class="rounded-md" src="" />
+                  <AvatarFallback
+                    class="rounded-md bg-emerald-400 text-neutral-900"
+                  >
+                    <GalleryVerticalEnd class="size-3.5" />
+                  </AvatarFallback>
+                </Avatar>
+                <span>{{ org.name }}</span>
+              </DropdownMenuItem>
+            </LazyDropdownMenuGroup>
+          </DropdownMenuContent>
+        </ClientOnly>
       </DropdownMenu>
       <SidebarTrigger
         class="bg-sidebar! hover:bg-primary! opacity-100 hover:border-primary border-sidebar-border"
