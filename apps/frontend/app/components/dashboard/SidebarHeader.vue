@@ -5,33 +5,9 @@ import { useSidebar } from '~/components/ui/sidebar';
 import { authClient } from '~/lib/auth';
 
 const sidebar = useSidebar();
+
 const organization = authClient.useActiveOrganization();
 const organizations = authClient.useListOrganizations();
-
-const obj = reactive({
-  organizations: organizations.value.isPending,
-  organization: organization.value.isPending,
-});
-
-if (!obj.organizations) {
-  if (!organizations.value.data || organizations.value.data.length === 0)
-    navigateTo('/create');
-  else if (!organization.value.data) {
-    authClient.organization.setActive({
-      organizationId: organizations.value.data[0]?.id,
-    });
-  }
-}
-
-watch(obj, (newVal) => {
-  if (newVal.organizations) return;
-  if (!organizations.value.data || organizations.value.data.length === 0)
-    return navigateTo('/create');
-  if (newVal.organization) return;
-  authClient.organization.setActive({
-    organizationId: organizations.value.data[0]?.id,
-  });
-});
 </script>
 
 <template>
