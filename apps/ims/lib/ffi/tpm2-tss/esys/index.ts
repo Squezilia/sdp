@@ -1,4 +1,4 @@
-import { Pointer, ptr, toArrayBuffer } from 'bun:ffi';
+import { type Pointer, ptr, toArrayBuffer } from 'bun:ffi';
 import { symbols } from './symbols';
 import { allocOutPtr, readPtr, writePointer } from '../utils';
 import { checkResult } from '../errors';
@@ -13,12 +13,15 @@ import {
   TPM2B_SENSITIVE_DATA,
   TPML_PCR_SELECTION,
   TPMT_TK_CREATION,
+} from '../structs';
+import type {
   TTPM2B_DATA,
   TTPM2B_PRIVATE,
   TTPM2B_PUBLIC,
   TTPM2B_SENSITIVE_CREATE,
   TTPML_PCR_SELECTION,
 } from '../structs';
+import type TPM2_TSS_TCTILDR from '../tctildr';
 
 /**
  * Minimal ESAPI wrapper for the subset of tpm2-tss used by IMS sealing flows.
@@ -50,7 +53,7 @@ export default class TPM2_TSS_ESYS {
    * This wrapper currently leaves the value null so tpm2-tss resolves its
    * configured default TCTI.
    */
-  tctiPtr: Pointer | null = null;
+  tctiContext: TPM2_TSS_TCTILDR | null = null;
 
   /**
    * Initializes an ESYS context for the configured/default TPM transport.
@@ -58,13 +61,15 @@ export default class TPM2_TSS_ESYS {
    * @throws {TPM2_TSS_ERROR} When `Esys_Initialize` returns a non-success
    * TSS2 result code.
    */
-  constructor() {
+  constructor(tctiContext?: TPM2_TSS_TCTILDR) {
     const contextBuf = allocOutPtr();
+
+    this.tctiContext = tctiContext ?? null;
 
     // TSS2_RC Esys_Initialize
     const result = symbols.Esys_Initialize(
       ptr(contextBuf), // ESYS_CONTEXT **  	esys_context,
-      this.tctiPtr ?? null, // TSS2_TCTI_CONTEXT *  	tcti,
+      tctiContext ? tctiContext.tctiPointer : null, // TSS2_TCTI_CONTEXT *  	tcti,
       null // TSS2_ABI_VERSION *  	abiVersion
     );
     checkResult(result);
@@ -135,18 +140,24 @@ export default class TPM2_TSS_ESYS {
     const creationHashPtr = readPtr(creationHashBuf) as Pointer;
     const creationTicketPtr = readPtr(creationTicketBuf) as Pointer;
 
-    const outPrivate = TPM2B_PRIVATE.unpack(toArrayBuffer(outPrivatePtr));
+    const outPrivate = TPM2B_PRIVATE.unpack(
+      toArrayBuffer(outPrivatePtr, 0, TPM2B_PRIVATE.size)
+    );
     symbols.Esys_Free(outPrivatePtr);
-    const outPublic = TPM2B_PUBLIC.unpack(toArrayBuffer(outPublicPtr));
+    const outPublic = TPM2B_PUBLIC.unpack(
+      toArrayBuffer(outPublicPtr, 0, TPM2B_PUBLIC.size)
+    );
     symbols.Esys_Free(outPublicPtr);
     const creationData = TPM2B_CREATION_DATA.unpack(
-      toArrayBuffer(creationDataPtr)
+      toArrayBuffer(creationDataPtr, 0, TPM2B_CREATION_DATA.size)
     );
     symbols.Esys_Free(creationDataPtr);
-    const creationHash = TPM2B_DIGEST.unpack(toArrayBuffer(creationHashPtr));
+    const creationHash = TPM2B_DIGEST.unpack(
+      toArrayBuffer(creationHashPtr, 0, TPM2B_DIGEST.size)
+    );
     symbols.Esys_Free(creationHashPtr);
     const creationTicket = TPMT_TK_CREATION.unpack(
-      toArrayBuffer(creationTicketPtr)
+      toArrayBuffer(creationTicketPtr, 0, TPMT_TK_CREATION.size)
     );
     symbols.Esys_Free(creationTicketPtr);
 
@@ -186,7 +197,9 @@ export default class TPM2_TSS_ESYS {
     checkResult(res);
 
     const outPtr = readPtr(outPtrBuf) as Pointer;
-    const out = TPM2B_SENSITIVE_DATA.unpack(toArrayBuffer(outPtr));
+    const out = TPM2B_SENSITIVE_DATA.unpack(
+      toArrayBuffer(outPtr, 0, TPM2B_SENSITIVE_DATA.size)
+    );
     symbols.Esys_Free(outPtr);
 
     return out;
@@ -204,13 +217,16 @@ export default class TPM2_TSS_ESYS {
    * result code.
    */
   public Esys_GetRandom(length: number = 16) {
+    if (!Number.isInteger(length) || length < 0 || length > 0xffff) {
+      throw new RangeError('Esys_GetRandom length must fit in UINT16');
+    }
+
     const randomBytesBuf = allocOutPtr();
 
     // TSS2_RC 	Esys_GetRandom
     const res = symbols.Esys_GetRandom(
       this.contextPtr, // ESYS_CONTEXT *  	esysContext,
-      enums.ESYS.ESYS_TR_NONE, // ESYS_TR  	itemHandle,
-      enums.ESYS.ESYS_TR_PASSWORD, // ESYS_TR  	shandle1,
+      enums.ESYS.ESYS_TR_NONE, // ESYS_TR  	shandle1,
       enums.ESYS.ESYS_TR_NONE, // ESYS_TR  	shandle2,
       enums.ESYS.ESYS_TR_NONE, // ESYS_TR  	shandle3,
       length, // UINT16 bytesRequested,
@@ -219,7 +235,9 @@ export default class TPM2_TSS_ESYS {
     checkResult(res);
 
     const randomBytesPtr = readPtr(randomBytesBuf) as Pointer;
-    const randomBytes = TPM2B_DIGEST.unpack(toArrayBuffer(randomBytesPtr));
+    const randomBytes = TPM2B_DIGEST.unpack(
+      toArrayBuffer(randomBytesPtr, 0, TPM2B_DIGEST.size)
+    );
     symbols.Esys_Free(randomBytesPtr);
     return randomBytes;
   }
@@ -228,22 +246,22 @@ export default class TPM2_TSS_ESYS {
    * Loads a previously created TPM object from its private and public blobs.
    *
    * The blobs are packed into native TPM2B layouts and passed to `Esys_Load`.
-   * The caller supplies the destination ESYS object-handle pointer value used
-   * by the current abstraction.
+   * The ESYS object handle returned by tpm2-tss is read from native out storage
+   * and returned to the caller.
    *
    * @param inPrivate Private blob returned by a previous create operation.
    * @param inPublic Public blob returned by a previous create operation.
-   * @param handle ESYS object handle storage used by the caller's load flow.
+   * @returns ESYS_TR handle for the loaded object.
    * @throws {TPM2_TSS_ERROR} When `Esys_Load` returns a non-success TSS2
    * result code.
    */
   public Esys_Load(
     inPrivate: TTPM2B_PRIVATE,
-    inPublic: TTPM2B_PUBLIC,
-    handle: number
+    inPublic: TTPM2B_PUBLIC
   ) {
     const inPrivateBuf = TPM2B_PRIVATE.pack(inPrivate);
     const inPublicBuf = TPM2B_PUBLIC.pack(inPublic);
+    const objectHandleBuf = new Uint32Array(1);
 
     // TSS2_RC 	Esys_Load
     const res = symbols.Esys_Load(
@@ -254,9 +272,11 @@ export default class TPM2_TSS_ESYS {
       enums.ESYS.ESYS_TR_NONE, // ESYS_TR  	shandle3,
       ptr(inPrivateBuf), // const TPM2B_PRIVATE *inPrivate,
       ptr(inPublicBuf), // const TPM2B_PUBLIC *inPublic,
-      handle // ESYS_TR *objectHandle
+      ptr(objectHandleBuf) // ESYS_TR *objectHandle
     );
     checkResult(res);
+
+    return new DataView(objectHandleBuf.buffer).getUint32(0, true);
   }
 
   /**
@@ -284,5 +304,6 @@ export default class TPM2_TSS_ESYS {
 
     // void Esys_Finalize(ESYS_CONTEXT **esys_context)
     symbols.Esys_Finalize(writePointer(this.contextPtr));
+    this.contextPtr = null;
   }
 }

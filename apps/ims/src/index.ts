@@ -3,14 +3,21 @@ import logger from '@sdp/config/logger';
 import cluster from './func/cluster';
 import credentials from './func/credentials';
 
-import TSS2 from '../lib/ffi/tpm2-tss/fapi';
 import { join } from 'path';
+import TPM2_TSS_TCTILDR from '../lib/ffi/tpm2-tss/tctildr';
+import TPM2_TSS_ESYS from '../lib/ffi/tpm2-tss/esys';
 
 const server = new Server({});
 const IMS_HOST = `${import.meta.env.IMS_HOST}:${import.meta.env.IMS_PORT}`;
 
-process.env.TSS2_FAPICONF = join(process.cwd(), 'fapi-config.json');
-process.env.TSS2_LOGLEVEL = 'fapi:debug';
+const tcti = new TPM2_TSS_TCTILDR(
+  import.meta.env.IMS_TSS2_TCTI || 'device:/tpm/tpm0'
+);
+
+const tpm = new TPM2_TSS_ESYS(tcti);
+const random = tpm.Esys_GetRandom(32);
+
+console.log(random.buffer);
 
 async function init() {
   await cluster(server);

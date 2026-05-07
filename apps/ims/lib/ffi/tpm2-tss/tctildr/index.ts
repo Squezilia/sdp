@@ -1,7 +1,7 @@
 import { checkResult } from '../errors';
 import { allocOutPtr, readPtr, writePointer } from '../utils';
 import { symbols } from './symbols';
-import { Pointer } from 'bun:ffi';
+import type { Pointer } from 'bun:ffi';
 
 /**
  * Minimal TCTI loader wrapper for the TPM transport used by IMS.
