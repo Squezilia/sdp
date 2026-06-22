@@ -3,7 +3,7 @@ import { authClient } from '~/lib/auth';
 import { toTypedSchema } from '@vee-validate/zod';
 import { useForm, Field as VeeField } from 'vee-validate';
 import * as z from 'zod';
-import SubHeading from '@/components/SubHeading.vue';
+import HeadingSub from '@/components/heading/Sub.vue';
 import { FieldError } from '@/components/ui/field';
 import useToast from '@/composables/useToast';
 
@@ -75,7 +75,7 @@ watch(
         @submit="onSubmit"
       >
         <div>
-          <SubHeading class="font-extrabold font-display">Giriş Yap</SubHeading>
+          <HeadingSub class="font-extrabold font-display">Giriş Yap</HeadingSub>
           <span class="text-sm text-muted-foreground text-pretty"
             >Tachyon'da devam etmek için giriş yap.</span
           >

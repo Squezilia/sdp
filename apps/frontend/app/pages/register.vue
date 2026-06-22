@@ -11,7 +11,7 @@ import { toTypedSchema } from '@vee-validate/zod';
 import { ArrowLeft } from 'lucide-vue-next';
 import { motion } from 'motion-v';
 import useToast from '~/composables/useToast';
-import SubHeading from '~/components/SubHeading.vue';
+import HeadingSub from '~/components/heading/Sub.vue';
 
 const FormElement = ref<HTMLFormElement | null>(null);
 
@@ -149,7 +149,7 @@ watch(
         @submit="onSubmit"
       >
         <div>
-          <SubHeading
+          <HeadingSub
             class="font-extrabold font-display flex items-center gap-2.5"
           >
             <motion.template layout>
@@ -161,7 +161,7 @@ watch(
                 ><ArrowLeft
               /></Button>
             </motion.template>
-            <motion.span>Kayıt Ol</motion.span></SubHeading
+            <motion.span>Kayıt Ol</motion.span></HeadingSub
           >
 
           <span class="text-sm text-muted-foreground text-pretty"

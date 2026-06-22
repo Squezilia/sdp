@@ -1,4 +1,10 @@
-import { LaptopMinimal, LayoutDashboard, Settings } from 'lucide-vue-next';
+import {
+  LaptopMinimal,
+  LayoutDashboard,
+  Package,
+  Server,
+  Settings,
+} from 'lucide-vue-next';
 
 export default defineAppConfig({
   navigation: {
@@ -54,6 +60,22 @@ export default defineAppConfig({
       'Sanal Makineler': {
         icon: LaptopMinimal,
         route: '/dash/vm',
+      },
+      'Dedicated Makineler': {
+        icon: Server,
+        route: '/dash/dedicated',
+      },
+      'Yönetimli Sistemler': {
+        icon: Package,
+        route: '/dash/managed',
+      },
+      Konteynırlar: {
+        icon: 'cib:docker',
+        route: '/dash/container',
+      },
+      Kubernetes: {
+        icon: 'cib:kubernetes',
+        route: '/dash/kubernetes',
       },
     },
   },

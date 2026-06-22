@@ -184,8 +184,8 @@ watchDebounced(
         class="col-span-5 p-4 space-y-4 bg-background border z-10 rounded-xl h-min my-auto"
       >
         <div>
-          <SubHeading class="font-extrabold font-display"
-            >Yeni Organizasyon</SubHeading
+          <HeadingSub class="font-extrabold font-display"
+            >Yeni Organizasyon</HeadingSub
           >
         </div>
         <FieldSet>

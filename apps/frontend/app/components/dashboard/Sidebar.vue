@@ -4,7 +4,8 @@ import type { RouteLocationAsString } from 'vue-router';
 
 type RouteGroup = Record<
   string,
-  { icon: Component; route: RouteLocationAsString } | RouteLocationAsString
+  | { icon: Component | string; route: RouteLocationAsString }
+  | RouteLocationAsString
 >;
 export type SidebarRoutes = Record<string, RouteGroup>;
 
@@ -33,7 +34,11 @@ const { sidebar } = useAppConfig();
                   as-child
                 >
                   <NuxtLink :to="record.route">
-                    <component :is="record.icon" /> {{ recordName }}
+                    <Icon
+                      v-if="typeof record.icon === 'string'"
+                      :name="record.icon"
+                    />
+                    <component :is="record.icon" v-else /> {{ recordName }}
                   </NuxtLink>
                 </SidebarMenuButton>
               </template>

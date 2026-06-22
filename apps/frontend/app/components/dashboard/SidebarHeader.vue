@@ -74,9 +74,6 @@ const organizations = authClient.useListOrganizations();
           </DropdownMenuContent>
         </ClientOnly>
       </DropdownMenu>
-      <SidebarTrigger
-        class="bg-sidebar! hover:bg-primary! opacity-100 hover:border-primary border-sidebar-border"
-      />
     </div>
   </SidebarHeader>
 </template>
