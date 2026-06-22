@@ -32,16 +32,25 @@ model Task {
   @@index([clusterId, id])
 }
 
+model MasterCredential {
+  id String @id @default(uuid(7))
+
+  name String
+
+  @@unique([name])
+  @@index([name])
+}
+
 model Credential {
   id String @id @default(uuid(7))
 
-  key    String
+  name   String
   secret String
 
   clusters Cluster[]
 
-  @@unique([key])
-  @@index([key])
+  @@unique([name])
+  @@index([name])
 }
 
 enum Provider {
