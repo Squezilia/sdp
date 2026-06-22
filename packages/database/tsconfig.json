@@ -3,7 +3,7 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@sdp/app-db": ["src"],
+      "@sdp/database": ["src"],
       "@sdp/config": ["../config/src"]
     }
   },

@@ -10,7 +10,6 @@ coverage
 *.tmp
 .DS_Store
 *.tsbuildinfo
-packages/app-db/src/generated
-packages/ims-db/src/generated
+packages/database/src/generated
 fapi-config.json
 fapi-home/
